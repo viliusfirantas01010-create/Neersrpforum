@@ -303,3 +303,382 @@ function closeForum(){
 </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NEERS RP — Форум</title>
+<style>
+:root{
+  --bg:#15120f;
+  --bg2:#1d1814;
+  --panel:#241e18;
+  --line:#39301f;
+  --gold:#c9932f;
+  --gold-bright:#e6ac3c;
+  --text:#e9e0cf;
+  --muted:#96897167;
+  --muted2:#a3947a;
+  --green:#5c8a4a;
+  padding-top: env(safe-area-inset-top,0px);
+  padding-bottom: env(safe-area-inset-bottom,0px);
+  box-sizing:border-box;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
+body{
+  font-family:'Trebuchet MS','Segoe UI',Tahoma,sans-serif;
+  font-size:14px;
+  line-height:1.5;
+}
+a{color:var(--gold-bright);text-decoration:none;}
+a:hover{text-decoration:underline;}
+header.topbar{
+  background:linear-gradient(180deg,#1a1410,#100d0a);
+  border-bottom:2px solid var(--gold);
+  padding:14px 18px calc(14px);
+  padding-top:calc(14px + env(safe-area-inset-top,0px));
+}
+.brandrow{
+  max-width:1080px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;
+}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand-mark{
+  width:42px;height:42px;flex:none;
+  background:conic-gradient(from 210deg,var(--gold-bright),#7a4e15,var(--gold-bright));
+  border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;color:#1a1410;font-size:18px;
+  box-shadow:0 0 0 1px #000, 0 0 14px rgba(230,172,60,.35);
+}
+.brand-name{font-size:20px;font-weight:700;letter-spacing:.5px;color:var(--gold-bright);}
+.brand-tag{font-size:11px;color:var(--muted2);margin-top:1px;}
+nav.mainnav{display:flex;gap:2px;flex-wrap:wrap;}
+nav.mainnav a{
+  padding:8px 12px;border-radius:4px;color:var(--text);font-size:13px;
+}
+nav.mainnav a:hover{background:var(--panel);text-decoration:none;color:var(--gold-bright);}
+nav.mainnav a.active{color:var(--gold-bright);border-bottom:2px solid var(--gold);}
+.statusbar{
+  background:var(--bg2);border-bottom:1px solid var(--line);
+  padding:8px 18px;font-size:12.5px;color:var(--muted2);
+}
+.statusbar-inner{max-width:1080px;margin:0 auto;display:flex;gap:18px;flex-wrap:wrap;align-items:center;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:5px;box-shadow:0 0 6px var(--green);}
+.statusbar b{color:var(--gold-bright);}
+main{max-width:1080px;margin:0 auto;padding:18px;}
+.grid{display:grid;grid-template-columns:1fr 250px;gap:18px;}
+@media (max-width:760px){.grid{grid-template-columns:1fr;}}
+.category{
+  background:var(--panel);border:1px solid var(--line);border-radius:6px;
+  margin-bottom:16px;overflow:hidden;border-left:4px solid var(--accent,var(--gold));
+}
+.badge{
+  display:inline-block;font-size:10.5px;font-weight:700;padding:2px 7px;
+  border-radius:3px;margin-left:6px;vertical-align:middle;
+}
+.badge.solved{background:#2c4a22;color:#8fd66a;}
+.badge.pending{background:#4a3a12;color:#e6ac3c;}
+.category-head{
+  background:linear-gradient(180deg,#2c2417,#211b13);
+  padding:9px 14px;border-bottom:1px solid var(--line);
+  font-weight:700;color:var(--gold-bright);font-size:13.5px;
+  display:flex;align-items:center;gap:8px;
+}
+.category-head .icon{opacity:.8;}
+.subforum{
+  display:flex;gap:12px;align-items:center;
+  padding:11px 14px;border-bottom:1px solid var(--line);
+  cursor:pointer;
+}
+.subforum:last-child{border-bottom:none;}
+.subforum:hover{background:#2a2317;}
+.subforum:hover .ftitle{color:var(--gold-bright);}
+.detail{display:none;background:var(--panel);border:1px solid var(--line);border-radius:6px;}
+.detail.show{display:block;}
+.detail-head{
+  padding:12px 14px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  background:linear-gradient(180deg,#2c2417,#211b13);
+}
+.back-btn{
+  background:#171310;border:1px solid var(--line);color:var(--gold-bright);
+  padding:6px 10px;border-radius:4px;font-size:12.5px;cursor:pointer;
+}
+.back-btn:hover{background:#221c14;}
+.detail-title{font-weight:700;color:var(--gold-bright);font-size:15px;}
+.new-topic{
+  margin-left:auto;background:linear-gradient(180deg,var(--gold-bright),#a87a24);
+  color:#1a1410;border:none;padding:7px 12px;border-radius:4px;font-weight:700;
+  font-size:12.5px;cursor:pointer;
+}
+.thread-row{
+  padding:11px 14px;border-bottom:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:10px;align-items:center;
+}
+.thread-row:last-child{border-bottom:none;}
+.thread-row .ttitle{color:var(--text);font-weight:600;font-size:13.5px;}
+.thread-row .tmeta{color:var(--muted2);font-size:11.5px;margin-top:2px;}
+.thread-row .tright{flex:none;text-align:right;color:var(--muted2);font-size:11.5px;}
+.thread-row .tright b{display:block;color:var(--gold-bright);font-size:13px;}
+.forumlist.hide{display:none;}
+.subforum .ficon{
+  width:34px;height:34px;flex:none;border-radius:4px;
+  background:#171310;border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:15px;
+}
+.subforum .fbody{flex:1;min-width:0;}
+.subforum .ftitle{font-weight:600;color:var(--text);font-size:14px;}
+.subforum .fdesc{color:var(--muted2);font-size:12px;margin-top:2px;}
+.subforum .fstats{
+  flex:none;text-align:center;color:var(--muted2);font-size:11.5px;
+  min-width:64px;border-left:1px solid var(--line);padding-left:12px;
+}
+.subforum .fstats b{display:block;color:var(--gold-bright);font-size:14px;}
+.subforum .flast{
+  flex:none;width:170px;font-size:11.5px;color:var(--muted2);display:none;
+}
+@media (min-width:640px){.subforum .flast{display:block;}}
+.subforum .flast a{display:block;color:var(--gold-bright);font-size:12px;font-weight:600;}
+.subforum .flast .who{color:var(--muted2);}
+.side-block{
+  background:var(--panel);border:1px solid var(--line);border-radius:6px;
+  margin-bottom:16px;
+}
+.side-head{
+  padding:9px 12px;border-bottom:1px solid var(--line);
+  font-weight:700;color:var(--gold-bright);font-size:13px;
+  background:linear-gradient(180deg,#2c2417,#211b13);
+}
+.side-body{padding:10px 12px;font-size:12.5px;color:var(--muted2);}
+.stat-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed var(--line);}
+.stat-line:last-child{border-bottom:none;}
+.stat-line b{color:var(--text);}
+.online-user{display:inline;color:var(--gold-bright);font-size:12px;}
+.donate-btn{
+  display:block;text-align:center;margin-top:8px;padding:9px;border-radius:4px;
+  background:linear-gradient(180deg,var(--gold-bright),#a87a24);
+  color:#1a1410;font-weight:700;font-size:13px;
+}
+.donate-btn:hover{filter:brightness(1.08);text-decoration:none;}
+footer{
+  text-align:center;padding:20px 12px calc(20px + env(safe-area-inset-bottom,0px));
+  color:var(--muted2);font-size:11.5px;border-top:1px solid var(--line);margin-top:10px;
+}
+
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:50;align-items:center;justify-content:center;padding:16px;}
+.modal-bg.show{display:flex;}
+.modal{background:var(--panel);border:1px solid var(--gold);border-radius:8px;width:100%;max-width:360px;padding:18px;}
+.tabs{display:flex;gap:6px;margin-bottom:14px;}
+.tab{flex:1;text-align:center;padding:8px;border-radius:4px;background:#171310;border:1px solid var(--line);color:var(--muted2);cursor:pointer;font-weight:700;font-size:13px;}
+.tab.on{background:linear-gradient(180deg,var(--gold-bright),#a87a24);color:#1a1410;border-color:var(--gold);}
+.modal input{width:100%;padding:10px;margin-bottom:10px;border-radius:4px;border:1px solid var(--line);background:#171310;color:var(--text);font-size:14px;}
+.modal .go{width:100%;padding:10px;border:none;border-radius:4px;background:linear-gradient(180deg,var(--gold-bright),#a87a24);color:#1a1410;font-weight:700;font-size:14px;cursor:pointer;}
+.modal .close{display:block;text-align:center;margin-top:10px;color:var(--muted2);font-size:12.5px;cursor:pointer;}
+.msg{font-size:12.5px;margin-bottom:10px;min-height:16px;}
+.msg.err{color:#e0664f;}
+.msg.ok{color:#8fd66a;}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brandrow">
+    <div class="brand">
+      <div class="brand-mark">N</div>
+      <div>
+        <div class="brand-name">NEERS RP</div>
+        <div class="brand-tag">Ролевой сервер · официальный форум</div>
+      </div>
+    </div>
+    <nav class="mainnav">
+      <a href="#" class="active">Форум</a>
+      <a href="#">Правила</a>
+      <a href="#">Донат</a>
+      <a href="#">Кланы</a>
+      <a href="#">Жалобы</a>
+      <a href="#" id="authLink" onclick="openAuth();return false;">Вход</a>
+    </nav>
+  </div>
+</header>
+
+<div class="statusbar">
+  <div class="statusbar-inner">
+    <span><span class="dot"></span>Сервер <b>онлайн</b></span>
+    <span>Игроков: <b>412 / 500</b></span>
+    <span>IP: <b>play.neersrp.ru:7777</b></span>
+    <span>На форуме сейчас: <b>87</b></span>
+  </div>
+</div>
+
+<main>
+  <div class="grid">
+
+    <div class="content">
+      <div class="forumlist" id="forumlist">
+      <div class="category" style="border-left:4px solid #3b82c4">
+        <div class="subforum" onclick="openForum(this)">
+          <div class="ficon">📌</div>
+          <div class="fbody">
+            <div class="ftitle">Новости и информация</div>
+            <div class="fdesc">Новости проекта, правила, ивенты</div>
+          </div>
+          <div class="fstats"><b>204</b>темы</div>
+          <div class="flast"><a href="#">Обновление 4.2 вышло</a><span class="who">от Admin_Oleg, 2 ч назад</span></div>
+        </div>
+      </div>
+
+      <div class="category" style="border-left:4px solid #3f7f6b">
+        <div class="subforum" onclick="openForum(this)">
+          <div class="ficon">💬</div>
+          <div class="fbody">
+            <div class="ftitle">Общение</div>
+            <div class="fdesc">Флудилка, барахолка, творчество игроков</div>
+          </div>
+          <div class="fstats"><b>2 965</b>тем</div>
+          <div class="flast"><a href="#">Как вам новый апдейт?</a><span class="who">от Kira_Nova, 8 мин назад</span></div>
+        </div>
+      </div>
+
+      <div class="category" style="border-left:4px solid #b4432f">
+        <div class="subforum" onclick="openForum(this)">
+          <div class="ficon">❗</div>
+          <div class="fbody">
+            <div class="ftitle">Жалобы на игроков</div>
+            <div class="fdesc">NonRP, обман, оскорбления, помеха РП процессу</div>
+          </div>
+          <div class="fstats"><b>1 370</b>жалоб</div>
+          <div class="flast"><a href="#">Жалоба на NonRP <span class="badge pending">на рассмотрении</span></a><span class="who">от Support_Team, 15 мин назад</span></div>
+        </div>
+      </div>
+
+      <div class="category" style="border-left:4px solid #a8862f">
+        <div class="subforum" onclick="openForum(this)">
+          <div class="ficon">📘</div>
+          <div class="fbody">
+            <div class="ftitle">Гайды и обучение</div>
+            <div class="fdesc">Помощь новичкам, работы и заработок</div>
+          </div>
+          <div class="fstats"><b>416</b>тем</div>
+          <div class="flast"><a href="#">Гайд для новых игроков</a><span class="who">от Admin_Oleg, 3 ч назад</span></div>
+        </div>
+      </div>
+
+      </div>
+
+      <div class="detail" id="detail">
+        <div class="detail-head">
+          <button class="back-btn" onclick="closeForum()">← Назад к разделам</button>
+          <span class="detail-title" id="detailTitle"></span>
+          <button class="new-topic">Создать тему</button>
+        </div>
+        <div id="detailThreads"></div>
+      </div>
+
+    </div>
+
+    <aside class="sidebar">
+      <div class="side-block">
+        <div class="side-head">Донат-магазин</div>
+        <div class="side-body">
+          Открой доступ к премиум-транспорту, VIP-статусу и уникальной кастомизации.
+          <a class="donate-btn" href="#">Перейти в магазин</a>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+</main>
+
+<footer>
+  NEERS RP © 2026 — неофициальный демонстрационный макет форума. Все ники и события вымышлены.
+</footer>
+
+<div class="modal-bg" id="authBg">
+  <div class="modal">
+    <div class="tabs">
+      <div class="tab on" id="tabLogin" onclick="setTab('login')">Вход</div>
+      <div class="tab" id="tabReg" onclick="setTab('reg')">Регистрация</div>
+    </div>
+    <div class="msg" id="authMsg"></div>
+    <input id="fNick" placeholder="Ник" autocomplete="username" maxlength="20">
+    <input id="fPass" type="password" placeholder="Пароль" autocomplete="current-password">
+    <input id="fPass2" type="password" placeholder="Повторите пароль" style="display:none" autocomplete="new-password">
+    <button class="go" id="authGo" onclick="submitAuth()">Войти</button>
+    <span class="close" onclick="closeAuth()">Закрыть</span>
+  </div>
+</div>
+
+<script>
+function openForum(el){
+  const ftitleEl = el.querySelector('.ftitle');
+  const title = ftitleEl ? ftitleEl.textContent : el.textContent.trim();
+  document.getElementById('detailTitle').textContent = title;
+
+  document.getElementById('detailThreads').innerHTML =
+    '<div style="padding:30px 14px;text-align:center;color:var(--muted2);font-size:13px;">Тем пока нет</div>';
+
+  document.getElementById('forumlist').classList.add('hide');
+  document.getElementById('detail').classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function closeForum(){
+  document.getElementById('detail').classList.remove('show');
+  document.getElementById('forumlist').classList.remove('hide');
+}
+
+let authMode='login';
+function getUsers(){try{return JSON.parse(localStorage.getItem('neers_users')||'{}');}catch(e){return {};}}
+function saveUsers(u){try{localStorage.setItem('neers_users',JSON.stringify(u));}catch(e){}}
+async function hashPass(s){
+  const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('neers:'+s));
+  return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+function setMsg(t,cls){const m=document.getElementById('authMsg');m.textContent=t;m.className='msg '+(cls||'');}
+function setTab(m){
+  authMode=m;
+  document.getElementById('tabLogin').classList.toggle('on',m==='login');
+  document.getElementById('tabReg').classList.toggle('on',m==='reg');
+  document.getElementById('fPass2').style.display=m==='reg'?'block':'none';
+  document.getElementById('authGo').textContent=m==='reg'?'Зарегистрироваться':'Войти';
+  setMsg('');
+}
+function openAuth(){
+  if(localStorage.getItem('neers_me')){logout();return;}
+  document.getElementById('authBg').classList.add('show');setTab('login');
+}
+function closeAuth(){document.getElementById('authBg').classList.remove('show');}
+async function submitAuth(){
+  const nick=document.getElementById('fNick').value.trim();
+  const pass=document.getElementById('fPass').value;
+  const users=getUsers();
+  if(!/^[A-Za-z0-9_А-Яа-я]{3,20}$/.test(nick)){setMsg('Ник: 3-20 символов, буквы, цифры, _','err');return;}
+  if(pass.length<6){setMsg('Пароль минимум 6 символов','err');return;}
+  const h=await hashPass(pass);
+  const key=nick.toLowerCase();
+  if(authMode==='reg'){
+    if(pass!==document.getElementById('fPass2').value){setMsg('Пароли не совпадают','err');return;}
+    if(users[key]){setMsg('Такой ник уже занят','err');return;}
+    users[key]={nick:nick,h:h};saveUsers(users);
+    localStorage.setItem('neers_me',nick);
+    setMsg('Аккаунт создан!','ok');
+    setTimeout(()=>{closeAuth();refreshAuth();},600);
+  }else{
+    if(!users[key]||users[key].h!==h){setMsg('Неверный ник или пароль','err');return;}
+    localStorage.setItem('neers_me',users[key].nick);
+    closeAuth();refreshAuth();
+  }
+}
+function logout(){localStorage.removeItem('neers_me');refreshAuth();}
+function refreshAuth(){
+  const me=localStorage.getItem('neers_me');
+  document.getElementById('authLink').textContent=me?(me+' · Выйти'):'Вход';
+}
+refreshAuth();
+</script>
+</body>
+</html>
