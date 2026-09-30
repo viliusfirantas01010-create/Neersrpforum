@@ -32,8 +32,6 @@ body{
 }
 a{color:var(--gold-bright);text-decoration:none;}
 a:hover{text-decoration:underline;}
-
-/* HEADER */
 header.topbar{
   background:linear-gradient(180deg,#1a1410,#100d0a);
   border-bottom:2px solid var(--gold);
@@ -62,8 +60,6 @@ nav.mainnav a{
 }
 nav.mainnav a:hover{background:var(--panel);text-decoration:none;color:var(--gold-bright);}
 nav.mainnav a.active{color:var(--gold-bright);border-bottom:2px solid var(--gold);}
-
-/* server status strip */
 .statusbar{
   background:var(--bg2);border-bottom:1px solid var(--line);
   padding:8px 18px;font-size:12.5px;color:var(--muted2);
@@ -71,13 +67,9 @@ nav.mainnav a.active{color:var(--gold-bright);border-bottom:2px solid var(--gold
 .statusbar-inner{max-width:1080px;margin:0 auto;display:flex;gap:18px;flex-wrap:wrap;align-items:center;}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:5px;box-shadow:0 0 6px var(--green);}
 .statusbar b{color:var(--gold-bright);}
-
-/* LAYOUT */
 main{max-width:1080px;margin:0 auto;padding:18px;}
 .grid{display:grid;grid-template-columns:1fr 250px;gap:18px;}
 @media (max-width:760px){.grid{grid-template-columns:1fr;}}
-
-/* forum category block */
 .category{
   background:var(--panel);border:1px solid var(--line);border-radius:6px;
   margin-bottom:16px;overflow:hidden;border-left:4px solid var(--accent,var(--gold));
@@ -103,8 +95,6 @@ main{max-width:1080px;margin:0 auto;padding:18px;}
 .subforum:last-child{border-bottom:none;}
 .subforum:hover{background:#2a2317;}
 .subforum:hover .ftitle{color:var(--gold-bright);}
-
-/* thread detail view */
 .detail{display:none;background:var(--panel);border:1px solid var(--line);border-radius:6px;}
 .detail.show{display:block;}
 .detail-head{
@@ -152,8 +142,6 @@ main{max-width:1080px;margin:0 auto;padding:18px;}
 @media (min-width:640px){.subforum .flast{display:block;}}
 .subforum .flast a{display:block;color:var(--gold-bright);font-size:12px;font-weight:600;}
 .subforum .flast .who{color:var(--muted2);}
-
-/* sidebar */
 .side-block{
   background:var(--panel);border:1px solid var(--line);border-radius:6px;
   margin-bottom:16px;
@@ -174,12 +162,10 @@ main{max-width:1080px;margin:0 auto;padding:18px;}
   color:#1a1410;font-weight:700;font-size:13px;
 }
 .donate-btn:hover{filter:brightness(1.08);text-decoration:none;}
-
 footer{
   text-align:center;padding:20px 12px calc(20px + env(safe-area-inset-bottom,0px));
   color:var(--muted2);font-size:11.5px;border-top:1px solid var(--line);margin-top:10px;
 }
-
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:50;align-items:center;justify-content:center;padding:16px;}
 .modal-bg.show{display:flex;}
 .modal{background:var(--panel);border:1px solid var(--gold);border-radius:8px;width:100%;max-width:360px;padding:18px;}
@@ -192,7 +178,6 @@ footer{
 .msg{font-size:12.5px;margin-bottom:10px;min-height:16px;}
 .msg.err{color:#e0664f;}
 .msg.ok{color:#8fd66a;}
-
 .server-select{
   display:inline-flex;align-items:center;gap:6px;background:#171310;border:1px solid var(--line);
   border-radius:4px;padding:4px 10px;font-size:12px;color:var(--text);
@@ -306,9 +291,6 @@ footer{
 </div>
 
 <script>
-const authors = ["Vasya_Pupkin","Wolf_Leader","Mayor_City","Kira_Nova","Admin_Oleg","Support_Team","Ivan_Steel","Olga_Bright"];
-const times = ["5 мин назад","23 мин назад","1 ч назад","2 ч назад","вчера","3 дня назад"];
-
 function openForum(el){
   const ftitleEl = el.querySelector('.ftitle');
   const title = ftitleEl ? ftitleEl.textContent : el.textContent.trim();
@@ -328,32 +310,13 @@ function closeForum(){
 }
 
 let authMode='login';
-
-function getUsers(){
-  try{
-    return JSON.parse(localStorage.getItem('neers_users')||'{}');
-  }catch(e){
-    return {};
-  }
-}
-
-function saveUsers(u){
-  try{
-    localStorage.setItem('neers_users',JSON.stringify(u));
-  }catch(e){}
-}
-
+function getUsers(){try{return JSON.parse(localStorage.getItem('neers_users')||'{}');}catch(e){return {};}}
+function saveUsers(u){try{localStorage.setItem('neers_users',JSON.stringify(u));}catch(e){}}
 async function hashPass(s){
   const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('neers:'+s));
   return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
 }
-
-function setMsg(t,cls){
-  const m=document.getElementById('authMsg');
-  m.textContent=t;
-  m.className='msg '+(cls||'');
-}
-
+function setMsg(t,cls){const m=document.getElementById('authMsg');m.textContent=t;m.className='msg '+(cls||'');}
 const RANKS={
   owner:{name:'Владелец',color:'var(--r-owner)'},
   deputy:{name:'Зам. Владельца',color:'var(--r-deputy)'},
@@ -371,7 +334,6 @@ const RANKS={
   seniormod:{name:'Ст. модератор',color:'var(--r-seniormod)'},
   mod:{name:'Модератор',color:'var(--r-mod)'}
 };
-
 function setTab(m){
   authMode=m;
   document.getElementById('tabLogin').classList.toggle('on',m==='login');
@@ -384,107 +346,50 @@ function setTab(m){
   document.getElementById('authGo').textContent=showReg?'Зарегистрироваться':'Войти';
   setMsg('');
 }
-
 function openAuth(){
   if(localStorage.getItem('neers_me')){logout();return;}
   document.getElementById('authBg').classList.add('show');setTab('login');
 }
-
 function closeAuth(){document.getElementById('authBg').classList.remove('show');}
-
 async function submitAuth(){
   const nick=document.getElementById('fNick').value.trim();
   const pass=document.getElementById('fPass').value;
   const users=getUsers();
-
-  if(!/^[A-Za-z0-9_А-Яа-я]{3,20}$/.test(nick)){
-    setMsg('Ник: 3-20 символов, буквы, цифры, _','err');
-    return;
-  }
-
-  if(pass.length<6){
-    setMsg('Пароль минимум 6 символов','err');
-    return;
-  }
-
+  if(!/^[A-Za-z0-9_А-Яа-я]{3,20}$/.test(nick)){setMsg('Ник: 3-20 символов, буквы, цифры, _','err');return;}
+  if(pass.length<6){setMsg('Пароль минимум 6 символов','err');return;}
   const h=await hashPass(pass);
   const key=nick.toLowerCase();
-
   if(authMode==='reg'){
     const email=document.getElementById('fEmail').value.trim();
     const rank=document.getElementById('fRank').value;
-
-    if(!/^\S+@\S+\.\S+$/.test(email)){
-      setMsg('Введите корректный e-mail','err');
-      return;
-    }
-
-    if(pass!==document.getElementById('fPass2').value){
-      setMsg('Пароли не совпадают','err');
-      return;
-    }
-
-    if(!document.getElementById('fRules').checked){
-      setMsg('Нужно согласиться с правилами','err');
-      return;
-    }
-
-    if(users[key]){
-      setMsg('Такой ник уже занят','err');
-      return;
-    }
-
-    users[key]={nick:nick,h:h,email:email,rank:rank};
-    saveUsers(users);
+    if(!/^\S+@\S+\.\S+$/.test(email)){setMsg('Введите корректный e-mail','err');return;}
+    if(pass!==document.getElementById('fPass2').value){setMsg('Пароли не совпадают','err');return;}
+    if(!document.getElementById('fRules').checked){setMsg('Нужно согласиться с правилами','err');return;}
+    if(users[key]){setMsg('Такой ник уже занят','err');return;}
+    users[key]={nick:nick,h:h,email:email,rank:rank};saveUsers(users);
     localStorage.setItem('neers_me',key);
-
     setMsg('Аккаунт создан!','ok');
-
     setTimeout(()=>{closeAuth();refreshAuth();},600);
   }else{
-    if(!users[key]||users[key].h!==h){
-      setMsg('Неверный ник или пароль','err');
-      return;
-    }
-
+    if(!users[key]||users[key].h!==h){setMsg('Неверный ник или пароль','err');return;}
     localStorage.setItem('neers_me',key);
-    closeAuth();
-    refreshAuth();
+    closeAuth();refreshAuth();
   }
 }
-
-function logout(){
-  localStorage.removeItem('neers_me');
-  refreshAuth();
-}
-
+function logout(){localStorage.removeItem('neers_me');refreshAuth();}
 function refreshAuth(){
   const key=localStorage.getItem('neers_me');
   const link=document.getElementById('authLink');
-
-  if(!key){
-    link.innerHTML='Вход';
-    link.style.color='';
-    return;
-  }
-
+  if(!key){link.innerHTML='Вход';link.style.color='';return;}
   const users=getUsers();
   const u=users[key];
-
-  if(!u){
-    link.innerHTML='Вход';
-    return;
-  }
-
+  if(!u){link.innerHTML='Вход';return;}
   const rankInfo=u.rank&&RANKS[u.rank]?RANKS[u.rank]:null;
-
   const nameHtml=rankInfo
     ? '<span style="color:'+rankInfo.color+';font-weight:700;">'+u.nick+'</span> <span style="color:var(--muted2);font-size:11px;">('+rankInfo.name+')</span>'
     : u.nick;
-
   link.innerHTML=nameHtml+' <span style="color:var(--muted2);">· Выйти</span>';
 }
-
 refreshAuth();
 </script>
 </body>
